@@ -1,13 +1,16 @@
 // @vitest-environment jsdom
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import { describe, it, expect } from "vitest";
 import userEvent from "@testing-library/user-event";
-import { MemoryRouter } from "react-router-dom";
+import {
+  MemoryRouter,
+  RouterProvider,
+  createMemoryRouter,
+} from "react-router-dom";
 import Booking from "../views/Booking";
+import Confirmation from "../views/Confirmation";
 
-/* Sätter upp min user */
-
-describe("Booking Component - Tester för User Story 1 & Felhantering", () => {
+describe("Booking Component - Tester för User Story 1-5 & Felhantering", () => {
   const setup = () => {
     const user = userEvent.setup();
     render(
@@ -18,7 +21,7 @@ describe("Booking Component - Tester för User Story 1 & Felhantering", () => {
     return { user };
   };
 
-  it("User Story 1: Ska kunna fylla i all data korrekt", async () => {
+  it("User Story 1 (G): Ska kunna fylla i all data korrekt", async () => {
     const { user } = setup();
 
     const dateInput = screen.getByLabelText(/Date/i);
@@ -36,29 +39,24 @@ describe("Booking Component - Tester för User Story 1 & Felhantering", () => {
     expect(peopleInput.value).toBe("2");
     expect(lanesInput.value).toBe("1");
   });
-  /* Felmeddelanden */
 
-  it("Error: Ska visa felmeddelande om fält saknas", async () => {
+  it("VG: Ska visa felmeddelande om fält saknas", async () => {
     const { user } = setup();
-
     await user.click(screen.getByText("strIIIIIike!"));
-
     expect(
       screen.getByText("Alla fälten måste vara ifyllda")
     ).toBeInTheDocument();
   });
 
-  it("Error: Ska visa felmeddelande om antalet skor inte matchar antalet spelare", async () => {
+  it("VG: Ska visa felmeddelande om antalet skor inte matchar antalet spelare", async () => {
     const { user } = setup();
 
     await user.type(screen.getByLabelText(/Date/i), "2023-12-24");
     await user.type(screen.getByLabelText(/Time/i), "18:00");
     await user.type(screen.getByLabelText(/Number of lanes/i), "1");
-
     await user.type(screen.getByLabelText(/Number of awesome bowlers/i), "2");
 
     await user.click(screen.getByText("+"));
-
     await user.type(screen.getByLabelText(/Shoe size \/ person 1/i), "42");
 
     await user.click(screen.getByText("strIIIIIike!"));
@@ -68,7 +66,7 @@ describe("Booking Component - Tester för User Story 1 & Felhantering", () => {
     ).toBeInTheDocument();
   });
 
-  it("Error: Ska visa felmeddelande om man lagt till skor men missat fylla i storlek", async () => {
+  it("VG: Ska visa felmeddelande om man lagt till skor men missat fylla i storlek", async () => {
     const { user } = setup();
 
     await user.type(screen.getByLabelText(/Date/i), "2023-12-24");
@@ -85,12 +83,11 @@ describe("Booking Component - Tester för User Story 1 & Felhantering", () => {
     ).toBeInTheDocument();
   });
 
-  it("Error: Ska visa felmeddelande om man bokar för många spelare per bana", async () => {
+  it("VG: Ska visa felmeddelande om man bokar för många spelare per bana", async () => {
     const { user } = setup();
 
     await user.type(screen.getByLabelText(/Date/i), "2023-12-24");
     await user.type(screen.getByLabelText(/Time/i), "18:00");
-
     await user.type(screen.getByLabelText(/Number of awesome bowlers/i), "5");
     await user.type(screen.getByLabelText(/Number of lanes/i), "1");
 
@@ -109,5 +106,63 @@ describe("Booking Component - Tester för User Story 1 & Felhantering", () => {
     expect(
       screen.getByText("Det får max vara 4 spelare per bana")
     ).toBeInTheDocument();
+  });
+
+  it("User Story 2 (G): Ska kunna lägga till skor och välja storlek", async () => {
+    const { user } = setup();
+    const addShoeBtn = screen.getByText("+");
+    await user.click(addShoeBtn);
+    const shoeInputs = screen.getAllByLabelText(/Shoe size/i);
+    expect(shoeInputs).toHaveLength(1);
+    await user.type(shoeInputs[0], "42");
+    expect(shoeInputs[0].value).toBe("42");
+  });
+
+  it("User Story 3 (G): Ska kunna ta bort ett skofält", async () => {
+    const { user } = setup();
+    const addShoeBtn = screen.getByText("+");
+    await user.click(addShoeBtn);
+    expect(screen.getAllByLabelText(/Shoe size/i)).toHaveLength(1);
+    const removeShoeBtn = screen.getByText("-");
+    await user.click(removeShoeBtn);
+    const remainingShoes = screen.queryAllByLabelText(/Shoe size/i);
+    expect(remainingShoes).toHaveLength(0);
+  });
+
+  // ---SKITKOD (USER STORY 4 & 5) ---
+
+  it("User Story 4 & 5 (G): Ska kunna boka, navigera och spara data", async () => {
+    const user = userEvent.setup();
+
+    const router = createMemoryRouter(
+      [
+        { path: "/", element: <Booking /> },
+        { path: "/confirmation", element: <Confirmation /> },
+      ],
+      { initialEntries: ["/"] }
+    );
+    render(<RouterProvider router={router} />);
+
+    await user.type(screen.getByLabelText(/Date/i), "2023-12-24");
+    await user.type(screen.getByLabelText(/Time/i), "18:00");
+    await user.type(screen.getByLabelText(/Number of awesome bowlers/i), "2");
+    await user.type(screen.getByLabelText(/Number of lanes/i), "1");
+
+    const addShoeBtn = screen.getByText("+");
+    await user.click(addShoeBtn);
+    await user.click(addShoeBtn);
+
+    const shoeInputs = screen.getAllByLabelText(/Shoe size/i);
+    await user.type(shoeInputs[0], "42");
+    await user.type(shoeInputs[1], "44");
+
+    const bookButton = screen.getByText("strIIIIIike!");
+    await user.click(bookButton);
+
+    await waitFor(() => {
+      expect(screen.getByText(/see you soon/i)).toBeInTheDocument();
+    });
+
+    expect(screen.getByDisplayValue(/STR8882/i)).toBeInTheDocument();
   });
 });

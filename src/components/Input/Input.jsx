@@ -10,18 +10,21 @@ function Input({
   disabled,
   maxLength,
 }) {
+  // LÖSNING: Vi genererar ett unikt ID.
+  // Om 'name' saknas (som i Confirmation.jsx), använder vi 'label' som ID istället.
+  // Motivering: För att göra komponenten tillgänglig och testbar med getByLabelText måste label och input kopplas ihop via id/for.
+  const inputId = name || label.toLowerCase();
+
   return (
     <section className="input">
-      {/* Ändrat här för att koppla ihop label och input*/}
-      <label className="input__label" htmlFor={name}>
+      <label className="input__label" htmlFor={inputId}>
         {label}
       </label>
       <input
         type={type}
         className={`input__field ${customClass ? customClass : ""}`}
         name={name}
-        // Och här
-        id={name}
+        id={inputId}
         onChange={handleChange}
         defaultValue={defaultValue ? defaultValue : ""}
         maxLength={maxLength}

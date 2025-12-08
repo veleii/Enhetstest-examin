@@ -5,8 +5,8 @@ import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router-dom";
 import Navigation from "../components/Navigation/Navigation";
 
-describe("Navigation Component", () => {
-  it("Ska kunna öppna och stänga menyn (Hamburgare)", async () => {
+describe("Navigation Component - Tester kopplade till User Stories", () => {
+  it("US5 AC1: Ska kunna öppna och stänga menyn för att komma åt navigering", async () => {
     const user = userEvent.setup();
     render(
       <MemoryRouter>
@@ -25,7 +25,7 @@ describe("Navigation Component", () => {
     expect(navElement).not.toHaveClass("show-menu");
   });
 
-  it("Ska klicka på länkarna i menyn för att navigera", async () => {
+  it("US5 AC1: Ska kunna klicka på länkarna i menyn för att navigera mellan vyer", async () => {
     const user = userEvent.setup();
     render(
       <MemoryRouter>

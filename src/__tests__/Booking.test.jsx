@@ -10,7 +10,7 @@ import {
 import Booking from "../views/Booking";
 import Confirmation from "../views/Confirmation";
 
-describe("Booking Component - Tester för User Story 1-5 & Felhantering", () => {
+describe("Booking Component - Tester kopplade till User Stories", () => {
   const setup = () => {
     const user = userEvent.setup();
     render(
@@ -21,7 +21,7 @@ describe("Booking Component - Tester för User Story 1-5 & Felhantering", () => 
     return { user };
   };
 
-  it("User Story 1 (G): Ska kunna fylla i all data korrekt", async () => {
+  it("US1 AC1-3: Ska kunna boka datum, tid, antal spelare och banor", async () => {
     const { user } = setup();
 
     const dateInput = screen.getByLabelText(/Date/i);
@@ -40,7 +40,7 @@ describe("Booking Component - Tester för User Story 1-5 & Felhantering", () => 
     expect(lanesInput.value).toBe("1");
   });
 
-  it("VG: Ska visa felmeddelande om fält saknas", async () => {
+  it("US1 VG: Ska visa felmeddelande om fält saknas vid bokning", async () => {
     const { user } = setup();
     await user.click(screen.getByText("strIIIIIike!"));
     expect(
@@ -48,42 +48,7 @@ describe("Booking Component - Tester för User Story 1-5 & Felhantering", () => 
     ).toBeInTheDocument();
   });
 
-  it("VG: Ska visa felmeddelande om antalet skor inte matchar antalet spelare", async () => {
-    const { user } = setup();
-
-    await user.type(screen.getByLabelText(/Date/i), "2023-12-24");
-    await user.type(screen.getByLabelText(/Time/i), "18:00");
-    await user.type(screen.getByLabelText(/Number of lanes/i), "1");
-    await user.type(screen.getByLabelText(/Number of awesome bowlers/i), "2");
-
-    await user.click(screen.getByText("+"));
-    await user.type(screen.getByLabelText(/Shoe size \/ person 1/i), "42");
-
-    await user.click(screen.getByText("strIIIIIike!"));
-
-    expect(
-      screen.getByText("Antalet skor måste stämma överens med antal spelare")
-    ).toBeInTheDocument();
-  });
-
-  it("VG: Ska visa felmeddelande om man lagt till skor men missat fylla i storlek", async () => {
-    const { user } = setup();
-
-    await user.type(screen.getByLabelText(/Date/i), "2023-12-24");
-    await user.type(screen.getByLabelText(/Time/i), "18:00");
-    await user.type(screen.getByLabelText(/Number of lanes/i), "1");
-    await user.type(screen.getByLabelText(/Number of awesome bowlers/i), "1");
-
-    await user.click(screen.getByText("+"));
-
-    await user.click(screen.getByText("strIIIIIike!"));
-
-    expect(
-      screen.getByText("Alla skor måste vara ifyllda")
-    ).toBeInTheDocument();
-  });
-
-  it("VG: Ska visa felmeddelande om man bokar för många spelare per bana", async () => {
+  it("US1 VG: Ska visa felmeddelande om man bokar för många spelare per bana", async () => {
     const { user } = setup();
 
     await user.type(screen.getByLabelText(/Date/i), "2023-12-24");
@@ -108,7 +73,7 @@ describe("Booking Component - Tester för User Story 1-5 & Felhantering", () => 
     ).toBeInTheDocument();
   });
 
-  it("User Story 2 (G): Ska kunna lägga till skor och välja storlek", async () => {
+  it("US2 AC1-3: Ska kunna lägga till skor och välja storlek", async () => {
     const { user } = setup();
     const addShoeBtn = screen.getByText("+");
     await user.click(addShoeBtn);
@@ -118,7 +83,42 @@ describe("Booking Component - Tester för User Story 1-5 & Felhantering", () => 
     expect(shoeInputs[0].value).toBe("42");
   });
 
-  it("User Story 3 (G): Ska kunna ta bort ett skofält", async () => {
+  it("US2 VG: Ska visa felmeddelande om antalet skor inte matchar antalet spelare", async () => {
+    const { user } = setup();
+
+    await user.type(screen.getByLabelText(/Date/i), "2023-12-24");
+    await user.type(screen.getByLabelText(/Time/i), "18:00");
+    await user.type(screen.getByLabelText(/Number of lanes/i), "1");
+    await user.type(screen.getByLabelText(/Number of awesome bowlers/i), "2");
+
+    await user.click(screen.getByText("+"));
+    await user.type(screen.getByLabelText(/Shoe size \/ person 1/i), "42");
+
+    await user.click(screen.getByText("strIIIIIike!"));
+
+    expect(
+      screen.getByText("Antalet skor måste stämma överens med antal spelare")
+    ).toBeInTheDocument();
+  });
+
+  it("US2 VG: Ska visa felmeddelande om man lagt till skor men missat fylla i storlek", async () => {
+    const { user } = setup();
+
+    await user.type(screen.getByLabelText(/Date/i), "2023-12-24");
+    await user.type(screen.getByLabelText(/Time/i), "18:00");
+    await user.type(screen.getByLabelText(/Number of lanes/i), "1");
+    await user.type(screen.getByLabelText(/Number of awesome bowlers/i), "1");
+
+    await user.click(screen.getByText("+"));
+
+    await user.click(screen.getByText("strIIIIIike!"));
+
+    expect(
+      screen.getByText("Alla skor måste vara ifyllda")
+    ).toBeInTheDocument();
+  });
+
+  it("US3 AC1-3: Ska kunna ta bort ett skofält", async () => {
     const { user } = setup();
     const addShoeBtn = screen.getByText("+");
     await user.click(addShoeBtn);
@@ -129,9 +129,7 @@ describe("Booking Component - Tester för User Story 1-5 & Felhantering", () => 
     expect(remainingShoes).toHaveLength(0);
   });
 
-  // ---SKITKOD (USER STORY 4 & 5) ---
-
-  it("User Story 4 & 5 (G): Ska kunna boka, navigera och spara data", async () => {
+  it("US4 AC1-3 & US5 AC1: Ska kunna boka, navigera och spara data", async () => {
     const user = userEvent.setup();
 
     const router = createMemoryRouter(

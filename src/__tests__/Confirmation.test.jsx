@@ -4,8 +4,8 @@ import { describe, it, expect } from "vitest";
 import { MemoryRouter } from "react-router-dom";
 import Confirmation from "../views/Confirmation";
 
-describe("Confirmation Component", () => {
-  it("Ska visa bokningsdetaljer om de skickas via state", () => {
+describe("Confirmation Component - Tester kopplade till User Stories", () => {
+  it("US4 AC2-4: Ska visa bokningsdetaljer och totalsumma om de skickas via state", () => {
     const mockBooking = {
       when: "2023-10-31T18:00",
       people: "2",
@@ -29,7 +29,7 @@ describe("Confirmation Component", () => {
     expect(screen.getByText(/340 sek/i)).toBeInTheDocument();
   });
 
-  it("Ska visa bokningsdetaljer från sessionStorage om state saknas", () => {
+  it("US5 AC3: Ska visa bokningsdetaljer från sessionStorage om state saknas", () => {
     const mockBooking = {
       when: "2023-11-01T19:00",
       people: "4",
@@ -51,7 +51,7 @@ describe("Confirmation Component", () => {
     sessionStorage.removeItem("confirmation");
   });
 
-  it('VG: Ska visa "Inga bokning gjord!" om ingen information finns', () => {
+  it('US5 AC2: Ska visa "Inga bokning gjord!" om ingen information finns', () => {
     sessionStorage.clear();
 
     render(

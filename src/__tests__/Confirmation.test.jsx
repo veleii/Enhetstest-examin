@@ -29,6 +29,18 @@ describe("Confirmation Component - Tester kopplade till User Stories", () => {
     expect(screen.getByText(/340 sek/i)).toBeInTheDocument();
   });
 
+  it('US5 AC2: Ska visa "Inga bokning gjord!" om ingen information finns', () => {
+    sessionStorage.clear();
+
+    render(
+      <MemoryRouter>
+        <Confirmation />
+      </MemoryRouter>
+    );
+
+    expect(screen.getByText("Inga bokning gjord!")).toBeInTheDocument();
+  });
+
   it("US5 AC3: Ska visa bokningsdetaljer från sessionStorage om state saknas", () => {
     const mockBooking = {
       when: "2023-11-01T19:00",
@@ -49,17 +61,5 @@ describe("Confirmation Component - Tester kopplade till User Stories", () => {
     expect(screen.getByLabelText(/Booking number/i)).toHaveValue("STR9999");
 
     sessionStorage.removeItem("confirmation");
-  });
-
-  it('US5 AC2: Ska visa "Inga bokning gjord!" om ingen information finns', () => {
-    sessionStorage.clear();
-
-    render(
-      <MemoryRouter>
-        <Confirmation />
-      </MemoryRouter>
-    );
-
-    expect(screen.getByText("Inga bokning gjord!")).toBeInTheDocument();
   });
 });

@@ -40,7 +40,7 @@ describe("Booking Component - Tester kopplade till User Stories", () => {
     expect(lanesInput.value).toBe("1");
   });
 
-  it("US1 VG: Ska visa felmeddelande om fält saknas vid bokning", async () => {
+  it("US1 VG AC4: Ska visa felmeddelande om flera fält saknas vid bokning", async () => {
     const { user } = setup();
     await user.click(screen.getByText("strIIIIIike!"));
     expect(
@@ -48,7 +48,74 @@ describe("Booking Component - Tester kopplade till User Stories", () => {
     ).toBeInTheDocument();
   });
 
-  it("US1 VG: Ska visa felmeddelande om man bokar för många spelare per bana", async () => {
+  it("US1 VG AC4: Ska visa felmeddelande om datumfält saknas vid bokning", async () => {
+    const { user } = setup();
+
+    const timeInput = screen.getByLabelText(/Time/i);
+    const peopleInput = screen.getByLabelText(/Number of awesome bowlers/i);
+    const lanesInput = screen.getByLabelText(/Number of lanes/i);
+
+    await user.type(timeInput, "18:00");
+    await user.type(peopleInput, "2");
+    await user.type(lanesInput, "1");
+
+    await user.click(screen.getByText("strIIIIIike!"));
+    expect(
+      screen.getByText("Alla fälten måste vara ifyllda")
+    ).toBeInTheDocument();
+  });
+
+  it("US1 VG AC4: Ska visa felmeddelande om tidsfält saknas vid bokning", async () => {
+    const { user } = setup();
+
+    const dateInput = screen.getByLabelText(/Date/i);
+    const peopleInput = screen.getByLabelText(/Number of awesome bowlers/i);
+    const lanesInput = screen.getByLabelText(/Number of lanes/i);
+
+    await user.type(dateInput, "2023-12-24");
+    await user.type(peopleInput, "2");
+    await user.type(lanesInput, "1");
+
+    await user.click(screen.getByText("strIIIIIike!"));
+    expect(
+      screen.getByText("Alla fälten måste vara ifyllda")
+    ).toBeInTheDocument();
+  });
+
+  it("US1 VG AC4: Ska visa felmeddelande om antal personer saknas vid bokning", async () => {
+    const { user } = setup();
+
+    const dateInput = screen.getByLabelText(/Date/i);
+    const timeInput = screen.getByLabelText(/Time/i);
+    const lanesInput = screen.getByLabelText(/Number of lanes/i);
+
+    await user.type(dateInput, "2023-12-24");
+    await user.type(timeInput, "18:00");
+    await user.type(lanesInput, "1");
+
+    await user.click(screen.getByText("strIIIIIike!"));
+    expect(
+      screen.getByText("Alla fälten måste vara ifyllda")
+    ).toBeInTheDocument();
+  });
+  it("US1 VG AC4: Ska visa felmeddelande om antal banor saknas vid bokning", async () => {
+    const { user } = setup();
+
+    const peopleInput = screen.getByLabelText(/Number of awesome bowlers/i);
+    const dateInput = screen.getByLabelText(/Date/i);
+    const timeInput = screen.getByLabelText(/Time/i);
+
+    await user.type(peopleInput, "2");
+    await user.type(dateInput, "2023-12-24");
+    await user.type(timeInput, "18:00");
+
+    await user.click(screen.getByText("strIIIIIike!"));
+    expect(
+      screen.getByText("Alla fälten måste vara ifyllda")
+    ).toBeInTheDocument();
+  });
+
+  it("US1 VG AC5: Ska visa felmeddelande om man bokar för många spelare per bana", async () => {
     const { user } = setup();
 
     await user.type(screen.getByLabelText(/Date/i), "2023-12-24");
@@ -73,17 +140,49 @@ describe("Booking Component - Tester kopplade till User Stories", () => {
     ).toBeInTheDocument();
   });
 
-  it("US2 AC1-3: Ska kunna lägga till skor och välja storlek", async () => {
+  it("US2 AC1 - 3 & 6: Ska kunna lägga till skor och välja storlek", async () => {
     const { user } = setup();
     const addShoeBtn = screen.getByText("+");
+
+    await user.click(addShoeBtn);
     await user.click(addShoeBtn);
     const shoeInputs = screen.getAllByLabelText(/Shoe size/i);
-    expect(shoeInputs).toHaveLength(1);
+
+    expect(shoeInputs).toHaveLength(2);
+
     await user.type(shoeInputs[0], "42");
+    await user.type(shoeInputs[1], "40");
+
     expect(shoeInputs[0].value).toBe("42");
+    expect(shoeInputs[1].value).toBe("40");
+
+    await user.clear(shoeInputs[0]);
+    await user.clear(shoeInputs[1]);
+    await user.type(shoeInputs[0], "36");
+    await user.type(shoeInputs[1], "37");
+
+    expect(shoeInputs[0].value).toBe("36");
+    expect(shoeInputs[1].value).toBe("37");
   });
 
-  it("US2 VG: Ska visa felmeddelande om antalet skor inte matchar antalet spelare", async () => {
+  it("US2 AC4: Ska visa felmeddelande om man lagt till skor men missat fylla i storlek", async () => {
+    const { user } = setup();
+
+    await user.type(screen.getByLabelText(/Date/i), "2023-12-24");
+    await user.type(screen.getByLabelText(/Time/i), "18:00");
+    await user.type(screen.getByLabelText(/Number of lanes/i), "1");
+    await user.type(screen.getByLabelText(/Number of awesome bowlers/i), "1");
+
+    await user.click(screen.getByText("+"));
+
+    await user.click(screen.getByText("strIIIIIike!"));
+
+    expect(
+      screen.getByText("Alla skor måste vara ifyllda")
+    ).toBeInTheDocument();
+  });
+
+  it("US2 AC5: Ska visa felmeddelande om antalet skor är färre än spelare", async () => {
     const { user } = setup();
 
     await user.type(screen.getByLabelText(/Date/i), "2023-12-24");
@@ -101,32 +200,65 @@ describe("Booking Component - Tester kopplade till User Stories", () => {
     ).toBeInTheDocument();
   });
 
-  it("US2 VG: Ska visa felmeddelande om man lagt till skor men missat fylla i storlek", async () => {
+  it("US2 AC5: Ska visa felmeddelande om antalet skor är fler än spelare", async () => {
     const { user } = setup();
 
     await user.type(screen.getByLabelText(/Date/i), "2023-12-24");
     await user.type(screen.getByLabelText(/Time/i), "18:00");
     await user.type(screen.getByLabelText(/Number of lanes/i), "1");
-    await user.type(screen.getByLabelText(/Number of awesome bowlers/i), "1");
+    await user.type(screen.getByLabelText(/Number of awesome bowlers/i), "2");
 
     await user.click(screen.getByText("+"));
+    await user.click(screen.getByText("+"));
+    await user.click(screen.getByText("+"));
+    await user.type(screen.getByLabelText(/Shoe size \/ person 1/i), "42");
+    await user.type(screen.getByLabelText(/Shoe size \/ person 2/i), "42");
+    await user.type(screen.getByLabelText(/Shoe size \/ person 3/i), "42");
 
     await user.click(screen.getByText("strIIIIIike!"));
 
     expect(
-      screen.getByText("Alla skor måste vara ifyllda")
+      screen.getByText("Antalet skor måste stämma överens med antal spelare")
     ).toBeInTheDocument();
   });
 
-  it("US3 AC1-3: Ska kunna ta bort ett skofält", async () => {
-    const { user } = setup();
+  it("US3 AC1-3: Ska kunna ta bort ett skofält och se till att priset blir rätt", async () => {
+    const user = userEvent.setup();
+
+    const router = createMemoryRouter(
+      [
+        { path: "/", element: <Booking /> },
+        { path: "/confirmation", element: <Confirmation /> },
+      ],
+      { initialEntries: ["/"] }
+    );
+    render(<RouterProvider router={router} />);
+
     const addShoeBtn = screen.getByText("+");
     await user.click(addShoeBtn);
-    expect(screen.getAllByLabelText(/Shoe size/i)).toHaveLength(1);
-    const removeShoeBtn = screen.getByText("-");
-    await user.click(removeShoeBtn);
-    const remainingShoes = screen.queryAllByLabelText(/Shoe size/i);
-    expect(remainingShoes).toHaveLength(0);
+    await user.click(addShoeBtn);
+    await user.click(addShoeBtn);
+
+    const removeShoeBtns = screen.getAllByText("-");
+    await user.click(removeShoeBtns[0]);
+
+    const shoeInputs = screen.getAllByLabelText(/Shoe size/i);
+    expect(shoeInputs).toHaveLength(2);
+
+    for (const input of shoeInputs) {
+      await user.type(input, "42");
+    }
+
+    await user.type(screen.getByLabelText(/Date/i), "2023-12-24");
+    await user.type(screen.getByLabelText(/Time/i), "18:00");
+    await user.type(screen.getByLabelText(/Number of awesome bowlers/i), "2");
+    await user.type(screen.getByLabelText(/Number of lanes/i), "1");
+
+    await user.click(screen.getByText("strIIIIIike!"));
+
+    await waitFor(() => {
+      expect(screen.getByText(/340 sek/i)).toBeInTheDocument();
+    });
   });
 
   it("US4 AC1-3 & US5 AC1: Ska kunna boka, navigera och spara data", async () => {

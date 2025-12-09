@@ -11,3 +11,4 @@ Målet med denna examination är att uppnå **(VG)**. Jag har därför skrivit t
 Mocks: handlers.js & server.js
 `__tests__`: Booking.test.jsx, Confirmation.test.jsx & Navigation.test.jsx
 Src: setupTests.js
+.github/workflows: test.yml

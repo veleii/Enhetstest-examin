@@ -40,7 +40,7 @@ describe("Booking Component - Tester kopplade till User Stories", () => {
     expect(lanesInput.value).toBe("1");
   });
 
-  it("US1 VG AC4: Ska visa felmeddelande om flera fält saknas vid bokning", async () => {
+  it("US1 AC4: Ska visa felmeddelande om flera fält saknas vid bokning", async () => {
     const { user } = setup();
     await user.click(screen.getByText("strIIIIIike!"));
     expect(
@@ -48,7 +48,7 @@ describe("Booking Component - Tester kopplade till User Stories", () => {
     ).toBeInTheDocument();
   });
 
-  it("US1 VG AC4: Ska visa felmeddelande om datumfält saknas vid bokning", async () => {
+  it("US1 AC4: Ska visa felmeddelande om datum saknas vid bokning", async () => {
     const { user } = setup();
 
     const timeInput = screen.getByLabelText(/Time/i);
@@ -65,7 +65,7 @@ describe("Booking Component - Tester kopplade till User Stories", () => {
     ).toBeInTheDocument();
   });
 
-  it("US1 VG AC4: Ska visa felmeddelande om tidsfält saknas vid bokning", async () => {
+  it("US1 AC4: Ska visa felmeddelande om tid saknas vid bokning", async () => {
     const { user } = setup();
 
     const dateInput = screen.getByLabelText(/Date/i);
@@ -82,7 +82,7 @@ describe("Booking Component - Tester kopplade till User Stories", () => {
     ).toBeInTheDocument();
   });
 
-  it("US1 VG AC4: Ska visa felmeddelande om antal personer saknas vid bokning", async () => {
+  it("US1 AC4: Ska visa felmeddelande om antal personer saknas vid bokning", async () => {
     const { user } = setup();
 
     const dateInput = screen.getByLabelText(/Date/i);
@@ -98,7 +98,8 @@ describe("Booking Component - Tester kopplade till User Stories", () => {
       screen.getByText("Alla fälten måste vara ifyllda")
     ).toBeInTheDocument();
   });
-  it("US1 VG AC4: Ska visa felmeddelande om antal banor saknas vid bokning", async () => {
+
+  it("US1 AC4: Ska visa felmeddelande om antal banor saknas vid bokning", async () => {
     const { user } = setup();
 
     const peopleInput = screen.getByLabelText(/Number of awesome bowlers/i);
@@ -115,7 +116,7 @@ describe("Booking Component - Tester kopplade till User Stories", () => {
     ).toBeInTheDocument();
   });
 
-  it("US1 VG AC5: Ska visa felmeddelande om man bokar för många spelare per bana", async () => {
+  it("US1 AC5: Ska visa felmeddelande om man bokar för många spelare per bana", async () => {
     const { user } = setup();
 
     await user.type(screen.getByLabelText(/Date/i), "2023-12-24");

@@ -8,22 +8,22 @@ Målet med denna examination är att uppnå **(VG)**. Jag har därför skrivit t
 
 # Adderat -
 
-# src
+## src
 
 - src/setupTests.js
 
-# tests
+## tests
 
 - src/**tests**/Booking.test.jsx
 - src/**tests**/Confirmation.test.jsx
 - src/**tests**/Navigation.test.jsx
 
-# mocks
+## mocks
 
 - mocks/handlers.js
 - mocks/server.js
 
-# .github
+## .github
 
 - .github/workflows/test.yml
 

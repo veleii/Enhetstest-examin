@@ -8,7 +8,26 @@ Målet med denna examination är att uppnå **(VG)**. Jag har därför skrivit t
 
 # Adderat -
 
-Mocks: handlers.js & server.js
-`__tests__`: Booking.test.jsx, Confirmation.test.jsx & Navigation.test.jsx
-Src: setupTests.js
-.github/workflows: test.yml
+# src
+
+src/setupTests.js
+
+# tests
+
+src/**tests**/Booking.test.jsx
+src/**tests**/Confirmation.test.jsx
+src/**tests**/Navigation.test.jsx
+
+# mocks
+
+mocks/handlers.js
+mocks/server.js
+
+# .github
+
+.github/workflows/test.yml
+
+# Ändringar i -
+
+vite.config.js
+src/components/input/input.jsx

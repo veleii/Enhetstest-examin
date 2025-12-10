@@ -152,18 +152,18 @@ describe("Booking Component - Tester kopplade till User Stories", () => {
     expect(shoeInputs).toHaveLength(2);
 
     await user.type(shoeInputs[0], "42");
-    await user.type(shoeInputs[1], "40");
+    await user.type(shoeInputs[1], "43");
 
     expect(shoeInputs[0].value).toBe("42");
-    expect(shoeInputs[1].value).toBe("40");
+    expect(shoeInputs[1].value).toBe("43");
 
     await user.clear(shoeInputs[0]);
     await user.clear(shoeInputs[1]);
-    await user.type(shoeInputs[0], "36");
-    await user.type(shoeInputs[1], "37");
+    await user.type(shoeInputs[0], "43");
+    await user.type(shoeInputs[1], "42");
 
-    expect(shoeInputs[0].value).toBe("36");
-    expect(shoeInputs[1].value).toBe("37");
+    expect(shoeInputs[0].value).toBe("43");
+    expect(shoeInputs[1].value).toBe("42");
   });
 
   it("US2 AC4: Ska visa felmeddelande om man lagt till skor men missat fylla i storlek", async () => {
